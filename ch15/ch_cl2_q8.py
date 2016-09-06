@@ -76,6 +76,7 @@ class Rectangle:
         self.height = temp
         
     def contains(self, testPoint):
+        # test if a Point falls within the rectangle
         hMin = self.lowerLeft.x
         hMax = self.lowerLeft.x + self.width
         vMin = self.lowerLeft.y
@@ -83,18 +84,39 @@ class Rectangle:
         return ((testPoint.x >= hMin) and (testPoint.x <= hMax)) and \
                ((testPoint.y >= vMin) and (testPoint.y <= vMax))
 
-    def collides(self, RectangleB):
-        r_B_lowerLeft = 
-        r_B_lowerRight =
-        r_B_vert_min
-        r_B_vert_max
-        pass        
+    def test_collide(self, secondRect):
+        # determine point locations of all 4 corners of self
+        self_lowerLeft  = self.lowerLeft
+        self_lowerRight = Point((self.lowerLeft.x + self.width), \
+                          self.lowerLeft.y)
+        self_upperLeft  = Point(self.lowerLeft.x, \
+                          (self.lowerLeft.y + self.height))
+        self_upperRight = Point((self.lowerLeft.x + self.width), \
+                          (self.lowerLeft.y + self.height))
         
-r = Rectangle(Point(0, 0), 10, 5)
-s = Rectangle(Point(0, 0), 10, 5)
-print(r.contains(Point(0, 0))) # True
-print(r.contains(Point(3, 3))) # True
-print(r.contains(Point(3, 7))) # False
-print(r.contains(Point(3, 5))) # False
-print(r.contains(Point(3, 4.99999))) # True
-print(r.contains(Point(-3, -3))) # False
+        # determine point locations of all 4 corners of secondRect
+        secondRect_lowerLeft  = secondRect.lowerLeft
+        secondRect_lowerRight = Point(\
+                                (secondRect.lowerLeft.x + secondRect.width), \
+                                secondRect.lowerLeft.y)
+        secondRect_upperLeft  = Point(secondRect.lowerLeft.x, \
+                                (secondRect.lowerLeft.y + secondRect.height))
+        secondRect_upperRight = Point(\
+                                (secondRect.lowerLeft.x + secondRect.width), \
+                                (secondRect.lowerLeft.y + secondRect.height))
+        
+        # test if self or secondRect contain any of each others points
+        # if they do (indicates collision), return True
+        if   self.contains(secondRect_lowerLeft):  return True
+        elif self.contains(secondRect_lowerRight): return True
+        elif self.contains(secondRect_upperLeft):  return True
+        elif self.contains(secondRect_upperRight): return True
+        elif secondRect.contains(self_lowerLeft):  return True
+        elif secondRect.contains(self_lowerRight): return True
+        elif secondRect.contains(self_upperLeft):  return True
+        elif secondRect.contains(self_upperRight): return True
+        else: return False
+
+r = Rectangle(Point(0, 0), 4.5, 4.5)
+s = Rectangle(Point(1, 1), 100, 100)
+print(r.test_collide(s))
